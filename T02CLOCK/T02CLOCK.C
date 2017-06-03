@@ -88,7 +88,7 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
     ReleaseDC(hWnd, hDC);
     hBm = NULL;
     SetTimer(hWnd, 47, 30, NULL);
-
+    /* Load images */
     hBmXOR = LoadImage(NULL, "XOR.BMP", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
     hBmAND = LoadImage(NULL, "AND.BMP", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 
@@ -116,7 +116,6 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
   case WM_TIMER:
     GetLocalTime(&st);
 
-    t = clock() / 6000.0;
     sec = (-st.wSecond - st.wMilliseconds / 1000.0) / 30.0 * pi;
     min = (-st.wMinute + sec / 60) / 30.0 * pi;
     hour = (-st.wHour + min / 60) / 6.0 * pi;
@@ -125,7 +124,7 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
     Rectangle(hMemDC, -1, -1, w + 1, h + 1);
     InvalidateRect(hWnd, NULL, FALSE);
     SelectObject(hMemDC, GetStockObject(NULL_BRUSH));
-
+    /* draw sprite */
     GetObject(hBmXOR, sizeof(BITMAP), &bm);
     SetStretchBltMode(hMemDCLogo, COLORONCOLOR);
     SelectObject(hMemDCLogo, hBmAND);
