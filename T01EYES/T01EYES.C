@@ -121,12 +121,16 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
     GetCursorPos(&pt);
     ScreenToClient(hWnd, &pt);
 
+    /* draw background */
+    SelectObject(hMemDC, GetStockObject(GRAY_BRUSH));
     Rectangle(hMemDC, -1, -1, w + 1, h + 1);
+    InvalidateRect(hWnd, NULL, FALSE);
+    SelectObject(hMemDC, GetStockObject(NULL_BRUSH));
     srand(30);
     for (i = 0; i < 666; i++)
     {
       x = rand() % w;
-      y = rand() % h;
+      y = rand() % (h + 1);
       DrawEye(hMemDC, x, y, 20, pt.x, pt.y, w, h, hWnd);
     }
     InvalidateRect(hWnd, NULL, FALSE);
