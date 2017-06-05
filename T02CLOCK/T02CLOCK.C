@@ -17,7 +17,7 @@
 #define dm 0
 #define wm 3
 #define Rs 150
-#define ds 0
+#define ds 10
 #define ws 1
 #define Rh 100
 #define dh 0
@@ -66,6 +66,24 @@ INT WINAPI WinMain( HINSTANCE hInstancce, HINSTANCE hPrevInstance, CHAR *CmdLine
   return msg.wParam;
 } /* End of 'WinMain' function */
 
+/* draw hand function */
+void DrawHand(INT w, INT h, INT wlength, FLOAT time, INT radius, INT dlength, HDC hDC )
+{
+  POINT p[4];
+
+  SelectObject(hDC, GetStockObject(BLACK_BRUSH));
+  p[0].x = w / 2 + wlength * cos(time) - radius * sin(time);
+  p[0].y = h / 2 - wlength * sin(time) - radius * cos(time);
+  p[1].x = w / 2 - wlength * cos(time) - radius * sin(time);
+  p[1].y = h / 2 + wlength * sin(time) - radius * cos(time);
+  p[2].x = w / 2 - wlength * cos(time) + dlength * sin(time);
+  p[2].y = h / 2 + wlength * sin(time) + dlength * cos(time);
+  p[3].x = w / 2 + wlength * cos(time) + dlength * sin(time);
+  p[3].y = h / 2 - wlength * sin(time) + dlength * cos(time);
+  Polygon(hDC, p, 4);
+  SelectObject(hDC, GetStockObject(NULL_BRUSH));
+} /* end 'DrawHand' function */
+
 
 LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
 {
@@ -74,7 +92,6 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
   SYSTEMTIME st;
   FLOAT t, sec, min, hour;
   PAINTSTRUCT ps;
-  POINT pts[4], p[4];
   static INT w, h;
   static HDC hMemDC, hMemDCLogo;
   static HBITMAP hBm, hBmAND, hBmXOR;
@@ -105,7 +122,7 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
     SendMessage(hWnd, WM_TIMER, 47, 0);
     return 0;
   case WM_KEYDOWN:
-    if (wParam == VK_ESCAPE)
+    if (wParam == VK_ESCAPE) /* press esc = exit*/
       DestroyWindow(hWnd);
     return 0;
   case WM_PAINT:
@@ -131,43 +148,12 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
     BitBlt(hMemDC, (w - bm.bmWidth) / 2, (h - bm.bmHeight) / 2, bm.bmWidth, bm.bmHeight, hMemDCLogo, 0, 0, SRCAND);
     SelectObject(hMemDCLogo, hBmXOR);
     BitBlt(hMemDC, (w - bm.bmWidth) / 2, (h - bm.bmHeight) / 2, bm.bmWidth, bm.bmHeight, hMemDCLogo, 0, 0, SRCINVERT);
-
-    SelectObject(hMemDC, GetStockObject(BLACK_BRUSH));
     /* draw second hand */
-    p[0].x = w / 2 + ws * cos(sec) - Rs * sin(sec);
-    p[0].y = h / 2 - ws * sin(sec) - Rs * cos(sec);
-    p[1].x = w / 2 - ws * cos(sec) - Rs * sin(sec);
-    p[1].y = h / 2 + ws * sin(sec) - Rs * cos(sec);
-    p[2].x = w / 2 - ws * cos(sec) + ds * sin(sec);
-    p[2].y = h / 2 + ws * sin(sec) + ds * cos(sec);
-    p[3].x = w / 2 + ws * cos(sec) + ds * sin(sec);
-    p[3].y = h / 2 - ws * sin(sec) + ds * cos(sec);
-    Polygon(hMemDC, p, 4);
-
+    DrawHand(w, h, ws, sec, Rs, ds, hMemDC);
     /* draw minute hand */
-    p[0].x = w / 2 + wm * cos(min) - Rm * sin(min);
-    p[0].y = h / 2 - wm * sin(min) - Rm * cos(min);
-    p[1].x = w / 2 - wm * cos(min) - Rm * sin(min);
-    p[1].y = h / 2 + wm * sin(min) - Rm * cos(min);
-    p[2].x = w / 2 - wm * cos(min) + dm * sin(min);
-    p[2].y = h / 2 + wm * sin(min) + dm * cos(min);
-    p[3].x = w / 2 + wm * cos(min) + dm * sin(min);
-    p[3].y = h / 2 - wm * sin(min) + dm * cos(min);
-    Polygon(hMemDC, p, 4);
-
+    DrawHand(w, h, wm, min, Rm, dm, hMemDC);
     /* draw hour hand */
-    p[0].x = w / 2 + wh * cos(hour) - Rh * sin(hour);
-    p[0].y = h / 2 - wh * sin(hour) - Rh * cos(hour);
-    p[1].x = w / 2 - wh * cos(hour) - Rh * sin(hour);
-    p[1].y = h / 2 + wh * sin(hour) - Rh * cos(hour);
-    p[2].x = w / 2 - wh * cos(hour) + dh * sin(hour);
-    p[2].y = h / 2 + wh * sin(hour) + dh * cos(hour);
-    p[3].x = w / 2 + wh * cos(hour) + dh * sin(hour);
-    p[3].y = h / 2 - wh * sin(hour) + dh * cos(hour);
-    Polygon(hMemDC, p, 4);
-
-    SelectObject(hMemDC, GetStockObject(NULL_BRUSH));
-
+    DrawHand(w, h, wh, hour, Rh, dh, hMemDC);
     return 0;
   case WM_ERASEBKGND:
     return 1;
