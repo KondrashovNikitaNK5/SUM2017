@@ -92,6 +92,8 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
   SYSTEMTIME st;
   FLOAT t, sec, min, hour;
   PAINTSTRUCT ps;
+  CHAR Buf[30];
+  HFONT hFnt;
   static INT w, h;
   static HDC hMemDC, hMemDCLogo;
   static HBITMAP hBm, hBmAND, hBmXOR;
@@ -132,6 +134,7 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
     return 0;
   case WM_TIMER:
     GetLocalTime(&st);
+    hFnt  = CreateFont(50, 0, 0, 0, FW_BOLD, TRUE, FALSE, FALSE, RUSSIAN_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, PROOF_QUALITY, VARIABLE_PITCH | FF_ROMAN, "Times");
 
     sec = (-st.wSecond - st.wMilliseconds / 1000.0) / 30.0 * pi;
     min = (-st.wMinute + sec / 60) / 30.0 * pi;
@@ -154,6 +157,14 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
     DrawHand(w, h, wm, min, Rm, dm, hMemDC);
     /* draw hour hand */
     DrawHand(w, h, wh, hour, Rh, dh, hMemDC);
+    /* create font */
+    SelectObject(hMemDC, hFnt);
+    SetTextColor(hMemDC, RGB(0, 0, 0));
+    SetBkColor(hMemDC, RGB(127, 127, 127));
+    SetBkMode(hMemDC, TRANSPARENT);
+    /* write day.month.year */
+    TextOut(hMemDC, w / 2 - 100, h / 2 + 320, Buf, sprintf(Buf, "%i.%i.%i", st.wDay, st.wMonth, st.wYear));
+    DeleteObject(hFnt);
     return 0;
   case WM_ERASEBKGND:
     return 1;
