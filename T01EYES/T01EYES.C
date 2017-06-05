@@ -55,28 +55,28 @@ INT WINAPI WinMain( HINSTANCE hInstancce, HINSTANCE hPrevInstance, CHAR *CmdLine
   return msg.wParam;
 } /* End of 'WinMain' function */
 
-
+/* draw eye function */
 VOID DrawEye( HDC hDC, INT Xc, INT Yc, INT R, INT X, INT Y, INT w, INT h, HWND hWnd)
 {
   INT dx = X - Xc, dy = Y - Yc, size;
   POINT pt;
-  FLOAT 
-    len = sqrt(dx * dx + dy * dy),
-    si = dy / len, co = dx / len;
+  FLOAT len = sqrt(dx * dx + dy * dy), si = dy / len, co = dx / len;
 
   GetCursorPos(&pt);
   ScreenToClient(hWnd, &pt);
 
   size = rand() % 3 + 1;
+  /* draw apple of the eye */
   SelectObject(hDC, GetStockObject(WHITE_BRUSH));
   Ellipse(hDC, Xc - 20 * size, Yc - 20 * size, Xc + 20 * size, Yc + 20 * size);
+  /* draw black of the eye*/
   SelectObject(hDC, GetStockObject(BLACK_BRUSH));
   if (pt.x < 0 || pt.x > w || pt.y < 0 || pt.y > h)
-    Ellipse(hDC, Xc - 8 * size, Yc - 8 * size, Xc + 8 * size, Yc + 8 * size);
+    Ellipse(hDC, Xc - 8 * size, Yc - 8 * size, Xc + 8 * size, Yc + 8 * size); /* when mouse out of window */
   else
-    Ellipse(hDC, Xc + (12 * co - 8) * size, Yc + (12 * si - 8) * size, Xc + (12 * co + 8) * size, Yc + (12 * si + 8) * size);
+    Ellipse(hDC, Xc + (12 * co - 8) * size, Yc + (12 * si - 8) * size, Xc + (12 * co + 8) * size, Yc + (12 * si + 8) * size); /* when mouse on window */
   SelectObject(hDC, GetStockObject(NULL_BRUSH));
-}
+} /* end 'DrawEye' function */
 
 LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
 {
@@ -109,7 +109,7 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
     SendMessage(hWnd, WM_TIMER, 47, 0);
     return 0;
   case WM_KEYDOWN:
-    if (wParam == VK_ESCAPE)
+    if (wParam == VK_ESCAPE) /* press esc = exit */
       DestroyWindow(hWnd);
     return 0;
   case WM_PAINT:
@@ -126,7 +126,9 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
     Rectangle(hMemDC, -1, -1, w + 1, h + 1);
     InvalidateRect(hWnd, NULL, FALSE);
     SelectObject(hMemDC, GetStockObject(NULL_BRUSH));
+
     srand(30);
+    /* draw eyes */
     for (i = 0; i < 666; i++)
     {
       x = rand() % w;
