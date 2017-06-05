@@ -38,27 +38,32 @@ void PrintPerm( void )
 /* recursion */
 void Go( int pos )
 {
-  int i;
+  int i, Saveparity, tmp;
+
   if (pos >= N)
   {
     PrintPerm();
     return;
   }
-  for (i = pos; i < N; i++)
+  Go(pos + 1);
+  Saveparity = parity;
+  for (i = pos + 1; i < N; i++)
   {
     Swap(&p[pos], &p[i]);
-    if (pos != i)
-      parity = !parity;
+    parity = !parity;
     Go(pos + 1);
-    Swap(&p[pos], &p[i]);
-    if (pos != i)
-      parity = !parity;
   }
+  tmp = p[pos];
+  for (i  = pos + 1; i < N; i++)
+    p[i - 1] = p[i];
+  p[N - 1] = tmp;
+  parity = Saveparity;
 }
 
 void main( void )
 {
   int i;
+
   printf("ENTER: N\n");
   scanf("%i", &N);
   for (i = 0; i < N; i++)
