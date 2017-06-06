@@ -12,8 +12,8 @@
 double matrix[MAX][MAX], Det = 0;
 int p[MAX], parity, N;
 
-/* swap function */
-void Swap( int* A, int* B )
+/* swap int values function */
+void Swap( int *A, int *B )
 {
   int tmp = *A;
 
@@ -21,14 +21,14 @@ void Swap( int* A, int* B )
   *B = tmp;
 } /* end 'Swap' funtion */
 
-/* double swap function */
-void fSwap( double* A, double* B )
+/* swap double values function */
+void FSwap( double *A, double *B )
 {
   double tmp = *A;
 
   *A = *B;
   *B = tmp;
-} /* end 'fSwap' funtion */
+} /* end 'FSwap' funtion */
 
 /* load matrix */
 void MatrixLoad( char* FileName )
@@ -49,6 +49,8 @@ void MatrixLoad( char* FileName )
   fclose(F);
 } /* end 'MatrixLoad' function */
 
+
+/* print in output */
 void PrintDet( void )
 {
   FILE *F;
@@ -58,8 +60,9 @@ void PrintDet( void )
     return;
   fprintf(F, "%lf \n", Det);
   fclose(F);
-}
+} /* end of 'PrintDet' function*/
 
+/* start Gauss method */
 void Gauss( void )
 {
   int g, i, j, MAX_i, MAX_j, sign = 1;
@@ -68,6 +71,7 @@ void Gauss( void )
 
   for (g = 0; g < N; g++)
   {
+    /* start for */
     MAX_i = g;
     MAX_j = g;
     for (i = g; i < N; i++)
@@ -75,18 +79,25 @@ void Gauss( void )
         if(fabs(matrix[MAX_i][MAX_j] < fabs(matrix[i][j])))
           MAX_i = i, MAX_j = j;
 
+    /* check 0 in matrix */
+    if (fabs(matrix[MAX_i][MAX_j]) < 1e-15)
+    {
+      result = 0;
+      return;
+    }
+
     if (MAX_i != g)
     {
       sign = -sign;
       for (i = g; i < N; i++)
-        fSwap(&matrix[MAX_i][i], &matrix [g][i]);
+        FSwap(&matrix[MAX_i][i], &matrix [g][i]);
     }
 
     if (MAX_j != g)
     {
       sign = -sign;
       for (i = g; i < N; i++)
-        fSwap(&matrix[i][MAX_j], &matrix[i][g]);
+        FSwap(&matrix[i][MAX_j], &matrix[i][g]);
     }
 
     for (j = g + 1; j < N; j++)
@@ -95,6 +106,7 @@ void Gauss( void )
       for (i = 0; i < N; i++)
         matrix[j][i] -= matrix[g][i] * coef;
     }
+    /* end for */
   }
   for (g = 0; g < N; g++)
     result *= matrix[g][g];
@@ -104,8 +116,9 @@ void Gauss( void )
     return;
   fprintf(F, "%f \n", result);
   fclose(F);
-}
+} /* end of 'Gauss' function */
 
+/* recursion */
 void Go( int pos )
 {
   int i, Saveparity, tmp;
@@ -134,7 +147,7 @@ void Go( int pos )
     p[i - 1] = p[i];
   p[N - 1] = tmp;
   parity = Saveparity;
-}
+} /* end of 'Go' function*/
 
 void main( void )
 {
