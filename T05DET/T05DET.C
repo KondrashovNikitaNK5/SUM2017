@@ -5,13 +5,12 @@
  */
 
 #include <stdio.h>
+#include <math.h>
 
-#define max 10
+#define MAX 42
 
-double matrix[max][max];
-int p[max];
-int parity, N;
-double Det = 0;
+double matrix[MAX][MAX], Det = 0;
+int p[MAX], parity, N;
 
 /* swap function */
 void Swap( int* A, int* B )
@@ -20,8 +19,18 @@ void Swap( int* A, int* B )
 
   *A = *B;
   *B = tmp;
-}
+} /* end 'Swap' funtion */
 
+/* double swap function */
+void fSwap( double* A, double* B )
+{
+  double tmp = *A;
+
+  *A = *B;
+  *B = tmp;
+} /* end 'fSwap' funtion */
+
+/* load matrix */
 void MatrixLoad( char* FileName )
 {
   int i, j;
@@ -32,13 +41,13 @@ void MatrixLoad( char* FileName )
     return;
 
   fscanf(F, "%d", &N);
-  if (N > max)
-    N = max;
+  if (N > MAX)
+    N = MAX;
   for (i = 0; i < N; i++)
     for (j = 0; j < N; j++)
       fscanf(F, "%lf", &matrix[i][j]);
   fclose(F);
-}
+} /* end 'MatrixLoad' function */
 
 void PrintDet( void )
 {
@@ -48,6 +57,52 @@ void PrintDet( void )
   if (F == NULL)
     return;
   fprintf(F, "%lf \n", Det);
+  fclose(F);
+}
+
+void Gauss( void )
+{
+  int g, i, j, MAX_i, MAX_j, sign = 1;
+  double result = 1, coef;
+  FILE *F;
+
+  for (g = 0; g < N; g++)
+  {
+    MAX_i = g;
+    MAX_j = g;
+    for (i = g; i < N; i++)
+      for (j = g; j < N; j++)
+        if(fabs(matrix[MAX_i][MAX_j] < fabs(matrix[i][j])))
+          MAX_i = i, MAX_j = j;
+
+    if (MAX_i != g)
+    {
+      sign = -sign;
+      for (i = g; i < N; i++)
+        fSwap(&matrix[MAX_i][i], &matrix [g][i]);
+    }
+
+    if (MAX_j != g)
+    {
+      sign = -sign;
+      for (i = g; i < N; i++)
+        fSwap(&matrix[i][MAX_j], &matrix[i][g]);
+    }
+
+    for (j = g + 1; j < N; j++)
+    {
+      coef = matrix[j][g] / matrix[g][g];
+      for (i = 0; i < N; i++)
+        matrix[j][i] -= matrix[g][i] * coef;
+    }
+  }
+  for (g = 0; g < N; g++)
+    result *= matrix[g][g];
+  result *= sign;
+  F = fopen("OUTPUT.TXT", "a");
+  if (F == NULL)
+    return;
+  fprintf(F, "%f \n", result);
   fclose(F);
 }
 
@@ -90,4 +145,5 @@ void main( void )
     p[i] = i;
   Go(0);
   PrintDet();
+  Gauss();
 }
