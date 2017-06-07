@@ -25,7 +25,7 @@ void DrawArrow( HDC hDC, INT x, INT y, INT posx, INT posy)
   hBr = CreateSolidBrush(RGB(255, 0, 0));
   hOldBr = SelectObject(hDC, hBr);
 
-  SelectObject(hDC, GetStockObject(hBr));
+  SelectObject(hDC, hBr);
   p[0].x = x - rx * si;
   p[0].y = y - rx * co;
   p[1].x = x - wx * co + rx * si;
@@ -40,7 +40,7 @@ void DrawArrow( HDC hDC, INT x, INT y, INT posx, INT posy)
   hBr = CreateSolidBrush(RGB(0, 0, 255));
   hOldBr = SelectObject(hDC, hBr);
 
-  SelectObject(hDC, GetStockObject(hBr));
+  SelectObject(hDC, hBr);
   p[0].x = x + wx * co - rx * si;
   p[0].y = y - wx * si - rx * co;
   p[1].x = x - rx * si;
