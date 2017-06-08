@@ -1,4 +1,4 @@
-  /* FILE NAME: T05DET.C
+ /* FILE NAME: T05DET.C
  * PROGRAMMER: NK5
  * DATE: 05.06.2017
  * PURPOSE: deturmined of matrix.

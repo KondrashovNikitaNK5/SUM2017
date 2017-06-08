@@ -13,6 +13,7 @@
 
 /* Forward references */
 LRESULT CALLBACK MyWindowFunc( HWND hWnd, unsigned Message, WPARAM wParam, LPARAM lParam);
+/* Set/reset full screen mode function */
 static VOID FlipFullScreen( HWND hWnd )
 {
   static BOOL IsFullScreen = FALSE;
