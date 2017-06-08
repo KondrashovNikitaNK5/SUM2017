@@ -13,8 +13,22 @@
 
 #define N 50
 #define M 100
+#define EXP 1
+#define EXP2 0.8
 
 static VEC G[N][M];
+
+DBL sin1( DBL angle, DBL p)
+{
+  return (sin(angle) > 0) ? pow(sin(angle), p) : -pow(-sin(angle), p);
+}
+
+DBL cos1( DBL angle, DBL p)
+{
+  return (cos(angle) > 0) ? pow(cos(angle), p) : -pow(-cos(angle), p);
+}
+
+
 
 MATR MatrRotate( DBL AngleInDegree, VEC R )
 {
@@ -55,18 +69,14 @@ VEC VecTransform( VEC V, MATR Matrix )
 
 VOID BuildSphere( DBL R )
 {
-  DBL theta, phi, x, y, z;
+  DBL theta, phi;
   INT i, j;
   for (theta = 0, i = 0; i < N; i++, theta += PI / (N - 1))
     for (phi = 0, j = 0; j < M; j++, phi += 2 * PI / (M - 1))
     {
-      x = R * sin(theta) * sin(phi);
-      y = R * cos(theta);
-      z = R * sin(theta) * cos(phi);
-
-      G[i][j].x = R * sin(theta) * sin(phi);
-      G[i][j].y = R * cos(theta);
-      G[i][j].z = R * sin(theta) * cos(phi);
+      G[i][j].x = R * sin1(theta, EXP2) * sin1(phi, EXP2);
+      G[i][j].y = R * cos1(theta, EXP2);
+      G[i][j].z = R * sin1(theta, EXP2) * cos1(phi, EXP2);
     }
 }
 
@@ -74,7 +84,7 @@ VOID DrawSphere( HDC hDC, INT w, INT h )
 {
   DBL size = 1, wp = size, hp = size, t = clock() / (DBL)CLOCKS_PER_SEC, xp, yp;
   INT i, j;
-  VEC vector = {1, 2, 3};
+  VEC vector = {3, 2, 1};
   POINT Pts[4];
 
   if (w > h)
