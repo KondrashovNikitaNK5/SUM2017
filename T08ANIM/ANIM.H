@@ -6,6 +6,8 @@
 
 #define NK5_MAX_UNITS 50
 
+extern INT NK5_MouseWheel;
+
 typedef struct tagnk5ANIM nk5ANIM;
 typedef struct tagnk5UNIT nk5UNIT;
 
@@ -22,6 +24,22 @@ struct tagnk5ANIM
   HBITMAP hFrame;
   nk5UNIT *Units[NK5_MAX_UNITS];
   INT NumOfUnits;
+  DBL GlobalTime, GlobalDeltaTime, Time, DeltaTime, FPS;
+  BOOL IsPause;
+  BYTE Keys[256];
+  BYTE KeysOld[256];
+  BYTE KeysClick[256];
+  INT
+    Mx, My, Mz,     /* Absolute coordinates */
+    Mdx, Mdy, Mdz;  /* Relative coordinates shift */
+  BYTE
+    JBut[32],                    /* Joystick button state */
+    JButOld[32],                 /* Joystick button old state */
+    JButClick[32];               /* Joystick button click info */
+  INT JPov;                      /* Joystick point-of-view control [0,1..8] */
+  DBL
+    Jx, Jy, Jz, Jr;              /* Joystick axes */
+
 };
 
 VOID NK5_AnimInit( HWND hWnd );

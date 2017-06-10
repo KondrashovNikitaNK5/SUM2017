@@ -149,6 +149,10 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
       NK5_AnimFlipFullScreen();
     return 0;
 
+  case WM_MOUSEWHEEL:
+    NK5_MouseWheel += (SHORT)HIWORD(wParam);
+    return 0;
+
   case WM_PAINT:
     hDC = BeginPaint(hWnd, &ps);
     NK5_AnimCopyFrame(hDC);
