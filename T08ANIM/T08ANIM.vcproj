@@ -206,10 +206,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\ANIM.H"
-					>
-				</File>
-				<File
 					RelativePath=".\UNITS.C"
 					>
 				</File>
@@ -222,6 +218,10 @@
 				Name="Unit Samples"
 				>
 				<File
+					RelativePath=".\ANIM.H"
+					>
+				</File>
+				<File
 					RelativePath=".\U_BBALL.C"
 					>
 				</File>
@@ -230,7 +230,31 @@
 					>
 				</File>
 				<File
+					RelativePath=".\U_CONTR.C"
+					>
+				</File>
+				<File
+					RelativePath=".\U_COW.C"
+					>
+				</File>
+				<File
 					RelativePath=".\U_POLE.C"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Rendering System"
+				>
+				<File
+					RelativePath=".\OBJ3D.C"
+					>
+				</File>
+				<File
+					RelativePath=".\RENDER.C"
+					>
+				</File>
+				<File
+					RelativePath=".\RENDER.H"
 					>
 				</File>
 			</Filter>

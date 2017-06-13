@@ -36,6 +36,9 @@ VOID NK5_AnimInit( HWND hWnd )
 
   NK5_Anim.IsPause = FALSE;
   NK5_Anim.FPS = 50;
+  NK5_AnimAddUnit(NK5_UnitCreateControl());
+  NK5_AnimAddUnit(NK5_UnitCreateCow());
+  NK5_RndInit();
 } /* End of 'NK5_AnimInit' function */
 
 VOID NK5_AnimClose( VOID )
@@ -73,6 +76,7 @@ VOID NK5_AnimResize( INT W, INT H )
   ReleaseDC(NK5_Anim.hWnd, hDC);
 
   SelectObject(NK5_Anim.hDC, NK5_Anim.hFrame);
+  NK5_RndSetProj();
 } /* End of 'NK5_AnimResize' function */
 
 VOID NK5_AnimCopyFrame( HDC hDC )

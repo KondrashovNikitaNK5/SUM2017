@@ -3,13 +3,15 @@
 
 #include "def.h"
 #include "units.h"
+#include "render.h"
 
 #define NK5_MAX_UNITS 50
 
-extern INT NK5_MouseWheel;
-
 typedef struct tagnk5ANIM nk5ANIM;
 typedef struct tagnk5UNIT nk5UNIT;
+
+extern nk5ANIM NK5_Anim;
+extern INT NK5_MouseWheel;
 
 struct tagnk5UNIT
 {
@@ -50,5 +52,10 @@ VOID NK5_AnimRender( VOID );
 VOID NK5_AnimAddUnit( nk5UNIT *Uni );
 VOID NK5_AnimDoExit( VOID );
 VOID NK5_AnimFlipFullScreen( VOID );
+
+nk5UNIT * NK5_AnimUnitCreate( INT Size );
+nk5UNIT * NK5_UnitCreateControl( VOID );
+nk5UNIT * NK5_UnitCreateCow( VOID );
+VOID NK5_AnimAddUnit( nk5UNIT *Uni );
 
 #endif

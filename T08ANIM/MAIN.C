@@ -76,7 +76,7 @@ INT WINAPI WinMain( HINSTANCE hInstancce, HINSTANCE hPrevInstance, CHAR *CmdLine
   /* register class */
   if (!RegisterClass(&wc))
   {
-    MessageBox(NULL, "...", "...", MB_OK);
+    MessageBox(NULL, "Error", "Error", MB_OK);
     return 0;
   }
 
@@ -88,10 +88,17 @@ INT WINAPI WinMain( HINSTANCE hInstancce, HINSTANCE hPrevInstance, CHAR *CmdLine
   UpdateWindow(hWnd);
 
   /* waiting message about 'WM_QUIT' */
-  while (GetMessage(&msg, NULL, 0, 0))
+  while (TRUE)
   {
-    TranslateMessage(&msg);
-    DispatchMessage(&msg);
+    if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+    {
+      if (msg.message == WM_QUIT)
+        break;
+      TranslateMessage(&msg);
+      DispatchMessage(&msg);
+    }
+    else
+      SendMessage(hWnd, WM_TIMER, 47, 0);
   }
   return msg.wParam;
 } /* End of 'WinMain' function */
@@ -122,7 +129,7 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
     hMemDCLogo = CreateCompatibleDC(hDC);
     ReleaseDC(hWnd, hDC);
     hBm = NULL;*/
-    SetTimer(hWnd, 47, 30, NULL);
+    SetTimer(hWnd, 47, 1, NULL);
 
     NK5_AnimInit(hWnd);
     return 0;
@@ -145,8 +152,6 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
   case WM_KEYDOWN:
     if (wParam == VK_ESCAPE) /* press esc = exit*/
       DestroyWindow(hWnd);
-    if (wParam == 'F') /* press F = fullscreen */
-      NK5_AnimFlipFullScreen();
     return 0;
 
   case WM_MOUSEWHEEL:

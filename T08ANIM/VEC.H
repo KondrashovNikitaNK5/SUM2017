@@ -5,7 +5,7 @@
  */
 
 #ifndef __VEC_H_
-#define __VEC_H_
+#define __VEC_H_                    
 
 #include <windows.h>
 #include <math.h>
@@ -48,6 +48,15 @@ _inline VEC VecSet( DBL X, DBL Y, DBL Z )
   return v;
 } /* End of 'VecSet' function */
 
+_inline VEC VecSet1( DBL R )
+{
+  VEC v;
+  v.X = R;
+  v.Y = R;
+  v.Z = R;
+  return v;
+} /* End of 'VecSet' function */
+
 _inline VEC VecAddVec( VEC V1, VEC V2 )
 {
   return VecSet(V1.X + V2.X, V1.Y + V2.Y, V1.Z + V2.Z);
@@ -85,7 +94,7 @@ _inline VEC VecCrossVec( VEC V1, VEC V2 )
 
 _inline DBL VecLen2( VEC V )
 {
-  return V.X * V.X + V.Y + V.Y + V.Z + V.Z;
+  return V.X * V.X + V.Y * V.Y + V.Z * V.Z;
 }
 
 _inline DBL VecLen( VEC V )
@@ -303,6 +312,26 @@ _inline MATR MatrInverse( MATR M )
         det;
   return r;
 }
+
+__inline MATR MatrView( VEC Loc, VEC At, VEC Up1 )
+{
+  VEC
+    Dir = VecNormalize(VecSubVec(At, Loc)),
+    Right = VecNormalize(VecCrossVec(Dir, Up1)),
+    Up = VecNormalize(VecCrossVec(Right, Dir));
+  MATR m =
+  {
+    {
+      {               Right.X,                Up.X,              -Dir.X, 0},
+      {               Right.Y,                Up.Y,              -Dir.Y, 0},
+      {               Right.Z,                Up.Z,              -Dir.Z, 0},
+      {-VecDotVec(Loc, Right), -VecDotVec(Loc, Up), VecDotVec(Loc, Dir), 1}
+    }
+  };
+
+  return m;
+} /* End of 'MatrView' function */
+
 #endif __VEC_H_
 
 /* END OF 'VEC.H' FILE */
