@@ -124,11 +124,6 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
     return 0;
 
   case WM_CREATE:
-    /*hDC = GetDC(hWnd);
-    hMemDC = CreateCompatibleDC(hDC);
-    hMemDCLogo = CreateCompatibleDC(hDC);
-    ReleaseDC(hWnd, hDC);
-    hBm = NULL;*/
     SetTimer(hWnd, 47, 1, NULL);
 
     NK5_AnimInit(hWnd);
@@ -137,16 +132,6 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
   case WM_SIZE:
     NK5_AnimResize(LOWORD(lParam), HIWORD(lParam));
     NK5_AnimRender();
-    /*InvalidateRect(hWnd, NULL, FALSE);
-    w = LOWORD(lParam);
-    h = HIWORD(lParam);
-    if (hBm != NULL)
-      DeleteObject(hBm);
-    hDC = GetDC(hWnd);
-    hBm = CreateCompatibleBitmap(hDC, w, h);
-    ReleaseDC(hWnd, hDC);
-    SelectObject(hMemDC, hBm);
-    SendMessage(hWnd, WM_TIMER, 47, 0);*/
     return 0;
 
   case WM_KEYDOWN:
@@ -161,31 +146,19 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
   case WM_PAINT:
     hDC = BeginPaint(hWnd, &ps);
     NK5_AnimCopyFrame(hDC);
-    //BitBlt(hDC, 0, 0, w, h, hMemDC, 0, 0, SRCCOPY);
     EndPaint(hWnd, &ps);
     return 0;
 
   case WM_TIMER:
     NK5_AnimRender();
     InvalidateRect(hWnd, NULL, FALSE);
-
-    //GetCursorPos(&pt);
-    //ScreenToClient(hWnd, &pt);
-
-    /* draw background */
-    //SelectObject(hMemDC, GetStockObject(GRAY_BRUSH));
-    //Rectangle(hMemDC, -1, -1, w + 1, h + 1);
-    //InvalidateRect(hWnd, NULL, FALSE);
-    //SelectObject(hMemDC, GetStockObject(NULL_BRUSH));
     return 0;
+
   case WM_ERASEBKGND:
     return 1;
+
   case WM_DESTROY:
     NK5_AnimClose();
-
-    /*DeleteObject(hBm);
-    DeleteDC(hMemDC);
-    KillTimer(hWnd, 47);*/
     PostQuitMessage(0);
     return 0;
   }

@@ -17,8 +17,8 @@ extern DBL
   NK5_RndProjSize; /* Prohect plane inner size */
 
 extern MATR
-  NK5_RndMatrView; /* Viewer matrix */
-
+  NK5_RndMatrView, /* Viewer matrix */
+  NK5_RndMatrProj;
 /* Rendering system initialization function.
  * ARGUMENTS: None.
  * RETURNS: None.

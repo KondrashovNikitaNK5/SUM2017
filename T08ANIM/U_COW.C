@@ -65,7 +65,7 @@ static VOID NK5_UnitResponse( nk5UNIT_COW *Uni, nk5ANIM *Ani )
  */
 static VOID NK5_UnitRender( nk5UNIT_COW *Uni, nk5ANIM *Ani )
 {
-  NK5_RndObjDraw(&Uni->Cow, MatrRotateY(Ani->Time * 100));
+  NK5_RndObjDraw(&Uni->Cow, MatrMulMatr(MatrRotateY(Ani->Time * 100), MatrTranslate(VecSet1((DBL)Ani->Mz / 100))));
 } /* End of 'NK5_UnitRender' function */
 
 /* Cow drawing unit creation function.

@@ -106,43 +106,35 @@ VOID NK5_RndObjDraw( nk5OBJ3D *Obj, MATR M )
 {
   INT i;
   POINT *pts;
+  MATR WVP;
 
   if ((pts = malloc(sizeof(POINT) * Obj->NumOfV)) == NULL)
     return;
 
-  M = MatrMulMatr(M, NK5_RndMatrView);
+  WVP = MatrMulMatr(M, MatrMulMatr(NK5_RndMatrView, NK5_RndMatrProj));
 
   /* Project all points */
   for (i = 0; i < Obj->NumOfV; i++)
   {
-    VEC p = PointTransform(Obj->V[i], M);
-    DBL
-      xp = p.X * NK5_RndProjDist / -p.Z,
-      yp = p.Y * NK5_RndProjDist / -p.Z;
-
-    pts[i].x = NK5_Anim.W / 2 + xp * NK5_Anim.W / NK5_RndWp;
-    pts[i].y = NK5_Anim.H / 2 - yp * NK5_Anim.H / NK5_RndHp;
+    VEC P = PointTransform(Obj->V[i], WVP);
+    
+    pts[i].x = (P.X + 1) * NK5_Anim.W / 2;
+    pts[i].y = (-P.Y + 1) * NK5_Anim.H / 2;
   }
 
   /* Draw all facets */
-    SelectObject(NK5_Anim.hDC, GetStockObject(DC_BRUSH));
+    SelectObject(NK5_Anim.hDC, GetStockObject(NULL_BRUSH));
     SelectObject(NK5_Anim.hDC, GetStockObject(DC_PEN));
-    SetDCBrushColor(NK5_Anim.hDC, RGB(0, 255, 255));
-    SetDCPenColor(NK5_Anim.hDC, RGB(255, 0, 0));
+    SetDCPenColor(NK5_Anim.hDC, RGB(0, 200, 0));
 
   for (i = 0; i < Obj->NumOfF; i++)
   {    
-    POINT *p = &pts[Obj->F[i][0]];
-    MoveToEx(NK5_Anim.hDC, p->x, p->y, NULL);
+    POINT p[3];
 
-    p = &pts[Obj->F[i][1]];
-    LineTo(NK5_Anim.hDC, p->x, p->y);
-
-    p = &pts[Obj->F[i][2]];
-    LineTo(NK5_Anim.hDC, p->x, p->y);
-
-    p = &pts[Obj->F[i][0]];
-    LineTo(NK5_Anim.hDC, p->x, p->y);
+    p[0] = pts[Obj->F[i][0]];
+    p[1] = pts[Obj->F[i][1]];
+    p[2] = pts[Obj->F[i][2]];
+    Polygon(NK5_Anim.hDC, p, 3);
   }
   free(pts);
 } /* End of 'NK5_RndObjDraw' function */

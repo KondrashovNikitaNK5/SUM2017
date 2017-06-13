@@ -332,6 +332,20 @@ __inline MATR MatrView( VEC Loc, VEC At, VEC Up1 )
   return m;
 } /* End of 'MatrView' function */
 
+__inline MATR MatrFrustum( DBL l, DBL r, DBL b, DBL t, DBL n ,DBL f )
+{
+  MATR m = MatrIdentity();
+  m.M[0][0] = 2 * n / (r - l);
+  m.M[1][1] = 2 * n / (t - b);
+  m.M[2][0] = (r + l) / (r - l);
+  m.M[2][1] = (t + b) / (t - b);
+  m.M[2][2] = -(f + n) / (f - n);
+  m.M[2][3] = -1;
+  m.M[3][2] = -2 * n * f / (f - n);
+  m.M[3][3] = 0;
+  return m;
+} /* End of 'MatrFrustum' function */
+
 #endif __VEC_H_
 
 /* END OF 'VEC.H' FILE */
