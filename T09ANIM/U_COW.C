@@ -15,7 +15,7 @@ typedef struct tagnk5UNIT_COW
 {
   NK5_UNIT_BASE_FIELDS
   nk5OBJ3D Cow;/* Cow model */
-  DBL Rotate;
+  DBL RotateY;
 } nk5UNIT_COW;
 
 /* Cow drawing unit initialization function.
@@ -54,9 +54,9 @@ static VOID NK5_UnitClose( nk5UNIT_COW *Uni, nk5ANIM *Ani )
  */
 static VOID NK5_UnitResponse( nk5UNIT_COW *Uni, nk5ANIM *Ani )
 {
-  Uni->Rotate += Ani->GlobalDeltaTime * Ani->Keys[VK_LBUTTON] * Ani->Mdx * 200;
+  Uni->RotateY += Ani->GlobalDeltaTime * Ani->Keys[VK_LBUTTON] * Ani->Mdx * 200;
   if(!Ani->IsPause)
-    Uni->Rotate += 0.05;
+    Uni->RotateY += Ani->DeltaTime * 102;
 } /* End of 'NK5_UnitResponse' function */
 
 /* Cow drawing unit render function.
@@ -69,7 +69,7 @@ static VOID NK5_UnitResponse( nk5UNIT_COW *Uni, nk5ANIM *Ani )
  */
 static VOID NK5_UnitRender( nk5UNIT_COW *Uni, nk5ANIM *Ani )
 {
-  NK5_RndObjDraw(&Uni->Cow, MatrMulMatr(MatrRotateY(Uni->Rotate), MatrTranslate(VecSet1((DBL)Ani->Mz / 100))));
+  NK5_RndObjDraw(&Uni->Cow, MatrMulMatr(MatrRotateY(Uni->RotateY), MatrTranslate(VecSet1((DBL)Ani->Mz / 100))));
 } /* End of 'NK5_UnitRender' function */
 
 /* Cow drawing unit creation function.

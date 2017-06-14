@@ -179,14 +179,6 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\ANIM.C"
-				>
-			</File>
-			<File
-				RelativePath=".\ANIM.H"
-				>
-			</File>
-			<File
 				RelativePath=".\DEF.H"
 				>
 			</File>
@@ -194,57 +186,65 @@
 				RelativePath=".\MAIN.C"
 				>
 			</File>
-			<File
-				RelativePath=".\OBJ3D.C"
-				>
-			</File>
-			<File
-				RelativePath=".\RENDER.C"
-				>
-			</File>
-			<File
-				RelativePath=".\RENDER.H"
-				>
-			</File>
-			<File
-				RelativePath=".\U_CONTR.C"
-				>
-			</File>
-			<File
-				RelativePath=".\U_COW.C"
-				>
-			</File>
-			<File
-				RelativePath=".\UNITS.C"
-				>
-			</File>
-			<File
-				RelativePath=".\UNITS.H"
-				>
-			</File>
-			<File
-				RelativePath=".\VEC.C"
-				>
-			</File>
-			<File
-				RelativePath=".\VEC.H"
-				>
-			</File>
 			<Filter
 				Name="Animation System"
 				>
+				<File
+					RelativePath=".\ANIM.C"
+					>
+				</File>
+				<File
+					RelativePath=".\ANIM.H"
+					>
+				</File>
+				<File
+					RelativePath=".\UNITS.C"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Math Support"
 				>
+				<File
+					RelativePath=".\VEC.C"
+					>
+				</File>
+				<File
+					RelativePath=".\VEC.H"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Rendering System"
 				>
+				<File
+					RelativePath=".\OBJ3D.C"
+					>
+				</File>
+				<File
+					RelativePath=".\RENDER.C"
+					>
+				</File>
+				<File
+					RelativePath=".\RENDER.H"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Unit Samples"
 				>
+				<File
+					RelativePath=".\U_CONTR.C"
+					>
+				</File>
+				<File
+					RelativePath=".\U_COW.C"
+					>
+				</File>
+				<File
+					RelativePath=".\UNITS.H"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter

@@ -161,6 +161,7 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
     /* Load images */
     hBmXOR = LoadImage(NULL, "XOR.BMP", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
     hBmAND = LoadImage(NULL, "AND.BMP", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+    FlipFullScreen(hWnd);
 
     return 0;
   case WM_SIZE:
@@ -190,8 +191,8 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
     hFnt  = CreateFont(50, 0, 0, 0, FW_BOLD, TRUE, FALSE, FALSE, RUSSIAN_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, PROOF_QUALITY, VARIABLE_PITCH | FF_ROMAN, "Times");
 
     sec = (-st.wSecond - st.wMilliseconds / 1000.0) / 30.0 * pi;
-    min = (-st.wMinute + sec / 60) / 30.0 * pi;
-    hour = (-st.wHour + min / 60) / 6.0 * pi;
+    min = (-st.wMinute - st.wSecond / 60.0) / 30.0 * pi;
+    hour = (-st.wHour - st.wMinute / 60.0) / 6.0 * pi;
     /* draw background */
     SelectObject(hMemDC, GetStockObject(GRAY_BRUSH));
     Rectangle(hMemDC, -1, -1, w + 1, h + 1);

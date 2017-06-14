@@ -193,33 +193,39 @@ _inline MATR MatrRotateX( DBL AngleInDegree )
 {
   MATR m = UnitMatrix;
   DBL a = D2R(AngleInDegree);
+  DBL co = cos(a);
+  DBL si = sin(a);
 
-  m.M[1][1] = cos(a);
-  m.M[1][2] = sin(a);
-  m.M[2][1] = -sin(a);
-  m.M[2][2] = cos(a);
+  m.M[1][1] = co;
+  m.M[1][2] = si;
+  m.M[2][1] = -si;
+  m.M[2][2] = co;
   return m;
 }
 _inline MATR MatrRotateY( DBL AngleInDegree )
 {
   MATR m = UnitMatrix;
   DBL a = D2R(AngleInDegree);
+  DBL co = cos(a);
+  DBL si = sin(a);
 
-  m.M[0][0] = cos(a);
-  m.M[0][2] = -sin(a);
-  m.M[2][0] = sin(a);
-  m.M[2][2] = cos(a);
+  m.M[0][0] = co;
+  m.M[0][2] = -si;
+  m.M[2][0] = si;
+  m.M[2][2] = co;
   return m;
 }
 _inline MATR MatrRotateZ( DBL AngleInDegree )
 {
   MATR m = UnitMatrix;
   DBL a = D2R(AngleInDegree);
+  DBL co = cos(a);
+  DBL si = sin(a);
 
-  m.M[0][0] = cos(a);
-  m.M[0][1] = sin(a);
-  m.M[1][0] = -sin(a);
-  m.M[1][1] = cos(a);
+  m.M[0][0] = co;
+  m.M[0][1] = si;
+  m.M[1][0] = -si;
+  m.M[1][1] = co;
   return m;
 }
 
