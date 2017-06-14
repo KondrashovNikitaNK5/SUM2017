@@ -58,6 +58,10 @@ static VOID NK5_UnitResponse( nk5UNIT_CONTROL *Uni, nk5ANIM *Ani )
     NK5_AnimFlipFullScreen();
   else if (Ani->KeysClick['P'])
     NK5_Anim.IsPause = !NK5_Anim.IsPause;
+  else if (Ani->KeysClick['W'])
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  else if (Ani->KeysClick['Q'])
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 } /* End of 'NK5_UnitResponse' function */
 
 /* Control unit render function.
