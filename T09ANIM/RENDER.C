@@ -20,6 +20,9 @@ MATR
   NK5_RndMatrView, /* Viewer matrix */
   NK5_RndMatrProj;
 
+UINT
+  NK5_RndProgId;
+
 /* Rendering system initialization function.
  * ARGUMENTS: None.
  * RETURNS: None.
@@ -32,6 +35,7 @@ VOID NK5_RndInit( VOID )
 
   NK5_RndMatrView = MatrView(VecSet1(23), VecSet1(0), VecSet(0, 1, 0));
   glEnable(GL_DEPTH_TEST);
+  glClearColor(0.3, 0.5, 0.7, 1);
 } /* End of 'NK5_RndInit' function */
 
 /* Project parameters adjust function.

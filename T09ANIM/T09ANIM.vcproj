@@ -218,7 +218,11 @@
 				Name="Rendering System"
 				>
 				<File
-					RelativePath=".\OBJ3D.C"
+					RelativePath=".\OBJ.C"
+					>
+				</File>
+				<File
+					RelativePath=".\PRIM.C"
 					>
 				</File>
 				<File
@@ -227,6 +231,10 @@
 				</File>
 				<File
 					RelativePath=".\RENDER.H"
+					>
+				</File>
+				<File
+					RelativePath=".\SHADERS.C"
 					>
 				</File>
 			</Filter>
@@ -239,6 +247,10 @@
 				</File>
 				<File
 					RelativePath=".\U_COW.C"
+					>
+				</File>
+				<File
+					RelativePath=".\U_LIGHT.C"
 					>
 				</File>
 				<File

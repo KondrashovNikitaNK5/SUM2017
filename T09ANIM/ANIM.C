@@ -12,7 +12,7 @@
 #pragma comment(lib, "winmm")
 
 #define NK5_GET_JOYSTICK_AXIS(A) \
-  (2.0 * (ji.dw ## A ## pos = jc.w ## A ## min) / (jc.w ## A ## max - jc.w ## A ## min - 1) - 1)
+  (2.0 * (ji.dw ## A ## pos - jc.w ## A ## min) / (jc.w ## A ## max - jc.w ## A ## min - 1) - 1)
 
 nk5ANIM NK5_Anim;
 INT NK5_MouseWheel;
@@ -49,7 +49,6 @@ BOOL NK5_AnimInit( HWND hWnd )
   NK5_Anim.IsPause = FALSE;
   NK5_Anim.FPS = 50;
   NK5_AnimAddUnit(NK5_UnitCreateControl());
-  NK5_AnimAddUnit(NK5_UnitCreateCow());
 
   /* OpenGL initialization: setup pixel format */
   pfd.nSize = sizeof(pfd);
@@ -73,6 +72,8 @@ BOOL NK5_AnimInit( HWND hWnd )
   }
 
   NK5_RndInit();
+  NK5_RndProgId = NK5_RndShaderLoad("A");
+
   return TRUE;
 }
 
@@ -88,6 +89,8 @@ VOID NK5_AnimClose( VOID )
   }
 
   NK5_Anim.NumOfUnits = 0;
+
+  NK5_RndShaderFree(NK5_RndProgId);
 
   /* Delete OpenGL data */
   wglMakeCurrent(NULL, NULL);
@@ -119,6 +122,7 @@ VOID NK5_AnimRender( VOID )
   INT i;
   LARGE_INTEGER t;
   POINT pt;
+  static DBL ShdTime;
   
   /*** Handle timer ***/
   NK5_FrameCounter++;                    /* increment frame counter (for FPS) */
@@ -203,6 +207,14 @@ VOID NK5_AnimRender( VOID )
 
   for (i = 0; i < NK5_Anim.NumOfUnits; i++)
     NK5_Anim.Units[i]->Response(NK5_Anim.Units[i], &NK5_Anim);
+
+  /*** Update shader ***/
+  if (NK5_Anim.GlobalTime - ShdTime > 2)
+  {
+    NK5_RndShaderFree(NK5_RndProgId);
+    NK5_RndProgId = NK5_RndShaderLoad("A");
+    ShdTime = NK5_Anim.GlobalTime;
+  }
 
   /*** Clear frame ***/
   /* Clear background */

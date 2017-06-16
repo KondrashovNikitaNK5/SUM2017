@@ -62,6 +62,9 @@ static VOID NK5_UnitResponse( nk5UNIT_CONTROL *Uni, nk5ANIM *Ani )
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   else if (Ani->KeysClick['Q'])
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  else if (Ani->KeysClick['S'])
+    NK5_AnimAddUnit(NK5_UnitCreateCow());
+
 } /* End of 'NK5_UnitResponse' function */
 
 /* Control unit render function.

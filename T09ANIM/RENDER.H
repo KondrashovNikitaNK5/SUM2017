@@ -23,6 +23,9 @@ extern DBL
 extern MATR
   NK5_RndMatrView, /* Viewer matrix */
   NK5_RndMatrProj;
+
+extern UINT
+  NK5_RndProgId;
 /* Rendering system initialization function.
  * ARGUMENTS: None.
  * RETURNS: None.
@@ -40,42 +43,74 @@ VOID NK5_RndSetProj( VOID );
  ***/
 
 /* Object description type */
-typedef struct tagnk5OBJ3D
+
+typedef struct tagnk5VERTEX
 {
-  VEC *V;      /* Vertex array */
-  INT NumOfV;  /* Vertex array size */
-  INT (*F)[3]; /* Facets array (point indices) */
-  INT NumOfF;  /* Facets array size */
-} nk5OBJ3D;
+  VEC P;
+  VEC2 T;
+  VEC N;
+  VEC4 C;
+} nk5VERTEX;
+
+typedef struct tagnk5PRIM
+{
+  BOOL IsTrimesh;
+  INT NumOfI;
+  MATR M;
+
+  INT VA, VBuf;
+  INT IBuf;
+} nk5PRIM;
+
+typedef struct tagnk5OBJ
+{
+  nk5PRIM *P;
+  INT NumOfP;
+} nk5OBJ;
+
+VEC LightPos;
+
+VOID NK5_RndPrimCreate( nk5PRIM *Pr, BOOL IsTrimesh, nk5VERTEX *V, INT NumOfV, INT *I, INT NumOfI );
+VOID NK5_RndPrimFree( nk5PRIM *Pr );
+VOID NK5_RndPrimDraw( nk5PRIM *Pr, MATR M );
+BOOL NK5_RndPrimLoad( nk5PRIM *Obj, CHAR *FileName );
+VOID NK5_RndTriMeshEvalNormals( nk5VERTEX *V, INT NumOfV, INT *I, INT NumOfI );
+VOID NK5_RndGridEvalNormals( nk5VERTEX *V, INT N, INT M );
+VOID NK5_RndPrimCreateSphere( nk5PRIM *Pr, VEC C, FLT R, INT N, INT M );
+VOID NK5_RndPrimCreatePlane( nk5PRIM *Pr, VEC C, VEC Du, VEC Dv, INT N, INT M );
 
 /* Object free memory function.
  * ARGUMENTS:
  *   - object pointer:
- *       nk5OBJ3D *Obj;
+ *       nk5OBJ *Obj;
  *   - model *.OBJ file name:
  *       CHAR *FileName;
  * RETURNS:
  *   (BOOL) TRUE if success, FALSE otherwise.
  */
-BOOL NK5_RndObjLoad( nk5OBJ3D *Obj, CHAR *FileName );
+BOOL NK5_RndObjLoad( nk5OBJ *Obj, CHAR *FileName );
 
 /* Object free memory function.
  * ARGUMENTS:
  *   - object pointer:
- *       nk5OBJ3D *Obj;
+ *       nk5OBJ *Obj;
  * RETURNS: None.
  */
-VOID NK5_RndObjFree( nk5OBJ3D *Obj );
+VOID NK5_RndObjFree( nk5OBJ *Obj );
 
 /* Object drawing function.
  * ARGUMENTS:
  *   - object pointer:
- *       nk5OBJ3D *Obj;
+ *       nk5OBJ *Obj;
  *   - world coordinate system transform matrix:
  *       MATR M;
  * RETURNS: None.
  */
-VOID NK5_RndObjDraw( nk5OBJ3D *Obj, MATR M );
+VOID NK5_RndObjDraw( nk5OBJ *Obj, MATR M );
+
+UINT NK5_RndShaderLoad( CHAR *FileNamePrefix );
+
+VOID NK5_RndShaderFree( UINT Prg );
 
 #endif /* __RENDER_H_ */
 

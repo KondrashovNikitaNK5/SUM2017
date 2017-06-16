@@ -10,6 +10,8 @@
 #include <windows.h>
 #include <math.h>
 
+#pragma warning (disable: 4244)
+
 #define PI 3.14159265358979323846
 #define INT BOOL
 #define D2R(A) ((A) * (PI / 180))
@@ -17,16 +19,26 @@
 
 /* basic double type */
 typedef double DBL;
+typedef float FLT;
 
 typedef struct tagVEC
 {
-  DBL X, Y, Z;
+  FLT X, Y, Z;
 } VEC;
 
+typedef struct tagVEC2
+{
+  FLT X, Y;
+} VEC2;
+
+typedef struct tagVEC4
+{
+  FLT X, Y, Z, W;
+} VEC4;
 /* Matrix representation type */
 typedef struct tagMATR
 {
-  DBL M[4][4];
+  FLT M[4][4];
 } MATR;
 
 static MATR UnitMatrix =
@@ -39,7 +51,7 @@ static MATR UnitMatrix =
   }
 };
 
-_inline VEC VecSet( DBL X, DBL Y, DBL Z )
+_inline VEC VecSet( FLT X, FLT Y, FLT Z )
 {
   VEC v;
   v.X = X;
@@ -48,7 +60,25 @@ _inline VEC VecSet( DBL X, DBL Y, DBL Z )
   return v;
 } /* End of 'VecSet' function */
 
-_inline VEC VecSet1( DBL R )
+_inline VEC2 Vec2Set( FLT X, FLT Y )
+{
+  VEC2 v;
+  v.X = X;
+  v.Y = Y;
+  return v;
+} /* End of 'Vec2Set' function */
+
+_inline VEC4 Vec4Set( FLT X, FLT Y, FLT Z, FLT W )
+{
+  VEC4 v;
+  v.X = X;
+  v.Y = Y;
+  v.Z = Z;
+  v.W = W;
+  return v;
+} /* End of 'Vec4Set' function */
+
+_inline VEC VecSet1( FLT R )
 {
   VEC v;
   v.X = R;
@@ -82,7 +112,7 @@ _inline VEC VecNeg( VEC V            )
   return VecSet(-V.X, -V.Y, -V.Z);
 }
 
-_inline DBL VecDotVec( VEC V1, VEC V2 )
+_inline FLT VecDotVec( VEC V1, VEC V2 )
 {
   return V1.X * V2.X + V1.Y * V2.Y + V1.Z * V2.Z;
 }
@@ -92,19 +122,19 @@ _inline VEC VecCrossVec( VEC V1, VEC V2 )
   return VecSet(V1.Y * V2.Z - V1.Z * V2.Y, V1.Z * V2.X - V1.X * V2.Z, V1.X * V2.Y - V1.Y * V2.X);
 }
 
-_inline DBL VecLen2( VEC V )
+_inline FLT VecLen2( VEC V )
 {
   return V.X * V.X + V.Y * V.Y + V.Z * V.Z;
 }
 
-_inline DBL VecLen( VEC V )
+_inline FLT VecLen( VEC V )
 {
   return sqrt(VecLen2(V));
 }
 
 _inline VEC VecNormalize( VEC V )
 {
-  DBL l = VecLen(V);
+  FLT l = VecLen(V);
   return VecSet(V.X / l, V.Y / l, V.Z / l);
 }
 
@@ -165,6 +195,12 @@ __inline VEC PointTransform( VEC V, MATR M )
                 (V.X * M.M[0][1] + V.Y * M.M[1][1] + V.Z * M.M[2][1] + M.M[3][1]) / w,
                 (V.X * M.M[0][2] + V.Y * M.M[1][2] + V.Z * M.M[2][2] + M.M[3][2]) / w);
 } /* End of 'PointTransform' function */
+
+#define MatrMulMatr3(A, B, C) \
+  (MatrMulMatr(A, MatrMulMatr(B, C)))
+#define MatrMulMatr4(A, B, C, D) \
+  (MatrMulMatr(A, MatrMulMatr3(B, C, D)))
+
 _inline MATR MatrIdentity( VOID )
 {
   return UnitMatrix;

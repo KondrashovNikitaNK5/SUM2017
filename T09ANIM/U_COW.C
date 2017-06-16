@@ -14,8 +14,9 @@
 typedef struct tagnk5UNIT_COW
 {
   NK5_UNIT_BASE_FIELDS
-  nk5OBJ3D Cow;/* Cow model */
+  nk5PRIM Cow;/* Cow model */
   DBL RotateY;
+  VEC Pos;
 } nk5UNIT_COW;
 
 /* Cow drawing unit initialization function.
@@ -28,7 +29,7 @@ typedef struct tagnk5UNIT_COW
  */
 static VOID NK5_UnitInit( nk5UNIT_COW *Uni, nk5ANIM *Ani )
 {
-  NK5_RndObjLoad(&Uni->Cow, "cow.object");
+  NK5_RndPrimLoad(&Uni->Cow, "cow.object");
 } /* End of 'NK5_UnitInit' function */
 
 /* Cow drawing unit deinitialization function.
@@ -41,7 +42,7 @@ static VOID NK5_UnitInit( nk5UNIT_COW *Uni, nk5ANIM *Ani )
  */
 static VOID NK5_UnitClose( nk5UNIT_COW *Uni, nk5ANIM *Ani )
 {
-  NK5_RndObjFree(&Uni->Cow);
+  NK5_RndPrimFree(&Uni->Cow);
 } /* End of 'NK5_UnitClose' function */
 
 /* Cow drawing unit inter frame events handle function.
@@ -69,7 +70,7 @@ static VOID NK5_UnitResponse( nk5UNIT_COW *Uni, nk5ANIM *Ani )
  */
 static VOID NK5_UnitRender( nk5UNIT_COW *Uni, nk5ANIM *Ani )
 {
-  NK5_RndObjDraw(&Uni->Cow, MatrMulMatr(MatrRotateY(Uni->RotateY), MatrTranslate(VecSet1((DBL)Ani->Mz / 100))));
+  NK5_RndPrimDraw(&Uni->Cow, MatrMulMatr(MatrRotateY(Uni->RotateY), MatrTranslate(VecSet1((DBL)Ani->Mz / 100))));
 } /* End of 'NK5_UnitRender' function */
 
 /* Cow drawing unit creation function.
