@@ -26,6 +26,10 @@ extern MATR
 
 extern UINT
   NK5_RndProgId;
+
+extern VEC
+  NK5_RndLightPos,
+  NK5_RndLightColor;
 /* Rendering system initialization function.
  * ARGUMENTS: None.
  * RETURNS: None.

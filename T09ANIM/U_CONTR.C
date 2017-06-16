@@ -52,6 +52,14 @@ static VOID NK5_UnitClose( nk5UNIT_CONTROL *Uni, nk5ANIM *Ani )
  */
 static VOID NK5_UnitResponse( nk5UNIT_CONTROL *Uni, nk5ANIM *Ani )
 {
+  static BOOL isGround = FALSE;
+
+  if(!isGround)
+  {
+    isGround = !isGround;
+    NK5_AnimAddUnit(NK5_UnitCreateGround());
+  }
+
   if (Ani->KeysClick[VK_ESCAPE])
     NK5_AnimDoExit();
   else if (Ani->KeysClick['F'])

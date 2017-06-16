@@ -57,6 +57,7 @@ nk5UNIT * NK5_AnimUnitCreate( INT Size );
 nk5UNIT * NK5_UnitCreateControl( VOID );
 nk5UNIT * NK5_UnitCreateCow( VOID );
 nk5UNIT * NK5_UnitCreateLight( VOID );
+nk5UNIT * NK5_UnitCreateGround( VOID );
 VOID NK5_AnimAddUnit( nk5UNIT *Uni );
 
 #endif

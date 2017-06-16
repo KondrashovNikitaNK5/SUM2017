@@ -126,7 +126,16 @@ VOID NK5_RndPrimDraw( nk5PRIM *Pr, MATR M )
   loc = glGetUniformLocation(NK5_RndProgId, "MatrW");
   if (loc != -1)
     glUniformMatrix4fv(loc, 1, FALSE, W.M[0]);
-  loc = glGetUniformLocation(NK5_RndProgId, "Time");
+  loc = glGetUniformLocation(NK5_RndProgId, "MatrV");
+  if (loc != -1)
+    glUniformMatrix4fv(loc, 1, FALSE, NK5_RndMatrView.M[0]);
+  loc = glGetUniformLocation(NK5_RndProgId, "LightPos");
+  if (loc != -1)
+    glUniform3fv(loc, 1, &NK5_RndLightPos.X);
+  loc = glGetUniformLocation(NK5_RndProgId, "LightColor");
+  if (loc != -1)
+    glUniform3fv(loc, 1, &NK5_RndLightColor.X);
+    loc = glGetUniformLocation(NK5_RndProgId, "Time");
   if (loc != -1)
     glUniform1f(loc, NK5_Anim.Time);
   loc = glGetUniformLocation(NK5_RndProgId, "GTime");
@@ -386,7 +395,7 @@ VOID NK5_RndPrimCreatePlane( nk5PRIM *Pr, VEC C, VEC Du, VEC Dv, INT N, INT M )
       p->N = Norm;
       p->P = VecAddVec(C,
         VecAddVec(VecMulNum(Du, j / (M - 1.0)), VecMulNum(Dv, i / (N - 1.0))));
-      p->P.Y += 18 * sin(j * 13.0) * cos(i * 13.0);
+      p->P.Y += 1 * sin(j * 1.0) * cos(i * 1.0);
       p->C = Vec4Set(0.18, 0.30, 0.08, 1);
       p->T = Vec2Set(j / (M - 1.0), i / (N - 1.0));
     }

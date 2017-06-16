@@ -23,6 +23,9 @@ MATR
 UINT
   NK5_RndProgId;
 
+VEC
+  NK5_RndLightPos,
+  NK5_RndLightColor;
 /* Rendering system initialization function.
  * ARGUMENTS: None.
  * RETURNS: None.
@@ -34,6 +37,10 @@ VOID NK5_RndInit( VOID )
   NK5_RndProjFarClip = 1000;
 
   NK5_RndMatrView = MatrView(VecSet1(23), VecSet1(0), VecSet(0, 1, 0));
+
+  NK5_RndLightPos = VecSet(7, 13, 0);
+  NK5_RndLightColor = VecSet(0.5, 0.5, 0.5);
+
   glEnable(GL_DEPTH_TEST);
   glClearColor(0.3, 0.5, 0.7, 1);
 } /* End of 'NK5_RndInit' function */
