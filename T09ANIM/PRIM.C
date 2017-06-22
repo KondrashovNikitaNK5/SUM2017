@@ -28,6 +28,7 @@ VOID NK5_RndPrimCreate( nk5PRIM *Pr, BOOL IsTrimesh,
                         nk5VERTEX *V, INT NumOfV,
                         INT *I, INT NumOfI )
 {
+  memset(Pr, 0, sizeof(nk5PRIM));
   Pr->NumOfI = NumOfI;
   Pr->IsTrimesh = IsTrimesh;
   Pr->M = MatrIdentity();
@@ -77,6 +78,8 @@ VOID NK5_RndPrimCreate( nk5PRIM *Pr, BOOL IsTrimesh,
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(INT) * NumOfI, I, GL_STATIC_DRAW);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+  Pr->MtlNo = 0;
 } /* Ens of 'NK5_RndPrimCreate' function */
 
 /* Free primitive function.
@@ -106,7 +109,7 @@ VOID NK5_RndPrimFree( nk5PRIM *Pr )
  */
 VOID NK5_RndPrimDraw( nk5PRIM *Pr, MATR M )
 {
-  INT loc;
+  INT loc, prg;
   MATR W, WVP;
 
   W = MatrMulMatr(Pr->M, M);
@@ -119,26 +122,27 @@ VOID NK5_RndPrimDraw( nk5PRIM *Pr, MATR M )
   glEnable(GL_PRIMITIVE_RESTART);
   glPrimitiveRestartIndex(-1);
 
-  glUseProgram(NK5_RndProgId);
-  loc = glGetUniformLocation(NK5_RndProgId, "MatrWVP");
+  prg = NK5_RndMaterialApply(Pr->MtlNo);
+  //glUseProgram(NK5_RndProgId);
+  loc = glGetUniformLocation(prg, "MatrWVP");
   if (loc != -1)
     glUniformMatrix4fv(loc, 1, FALSE, WVP.M[0]);
-  loc = glGetUniformLocation(NK5_RndProgId, "MatrW");
+  loc = glGetUniformLocation(prg, "MatrW");
   if (loc != -1)
     glUniformMatrix4fv(loc, 1, FALSE, W.M[0]);
-  loc = glGetUniformLocation(NK5_RndProgId, "MatrV");
+  loc = glGetUniformLocation(prg, "MatrV");
   if (loc != -1)
     glUniformMatrix4fv(loc, 1, FALSE, NK5_RndMatrView.M[0]);
-  loc = glGetUniformLocation(NK5_RndProgId, "LightPos");
+  loc = glGetUniformLocation(prg, "LightPos");
   if (loc != -1)
     glUniform3fv(loc, 1, &NK5_RndLightPos.X);
-  loc = glGetUniformLocation(NK5_RndProgId, "LightColor");
+  loc = glGetUniformLocation(prg, "LightColor");
   if (loc != -1)
     glUniform3fv(loc, 1, &NK5_RndLightColor.X);
-    loc = glGetUniformLocation(NK5_RndProgId, "Time");
+    loc = glGetUniformLocation(prg, "Time");
   if (loc != -1)
     glUniform1f(loc, NK5_Anim.Time);
-  loc = glGetUniformLocation(NK5_RndProgId, "GTime");
+  loc = glGetUniformLocation(prg, "GTime");
   if (loc != -1)
     glUniform1f(loc, NK5_Anim.GlobalTime);
 
@@ -395,7 +399,7 @@ VOID NK5_RndPrimCreatePlane( nk5PRIM *Pr, VEC C, VEC Du, VEC Dv, INT N, INT M )
       p->N = Norm;
       p->P = VecAddVec(C,
         VecAddVec(VecMulNum(Du, j / (M - 1.0)), VecMulNum(Dv, i / (N - 1.0))));
-      p->P.Y += 1 * sin(j * 1.0) * cos(i * 1.0);
+      //p->P.Y += 1 * sin(j * 1.0) * cos(i * 1.0);
       p->C = Vec4Set(0.18, 0.30, 0.08, 1);
       p->T = Vec2Set(j / (M - 1.0), i / (N - 1.0));
     }

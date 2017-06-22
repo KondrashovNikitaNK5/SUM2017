@@ -14,9 +14,9 @@
 typedef struct tagnk5UNIT_GROUND
 {
   NK5_UNIT_BASE_FIELDS
-  nk5PRIM Ground;/* Ground model */
-  VEC Pos;
+  nk5OBJ Ground;/* Ground model */
   DBL RotateY;
+  VEC Pos;
 } nk5UNIT_GROUND;
 
 /* Cow drawing unit initialization function.
@@ -29,7 +29,8 @@ typedef struct tagnk5UNIT_GROUND
  */
 static VOID NK5_UnitInit( nk5UNIT_GROUND *Uni, nk5ANIM *Ani )
 {
-  NK5_RndPrimCreatePlane(&Uni->Ground, VecSet(-50, 0, -50), VecSet(0, 0, 100), VecSet(100, 0, 0), 400, 400);
+  NK5_RndObjLoad(&Uni->Ground, "naboo.g3dm");
+  //NK5_RndPrimCreatePlane(&Uni->Ground, VecSet(-50, -1, -50), VecSet(0, 0, 100), VecSet(100, 0, 0), 400, 400);
 } /* End of 'NK5_UnitInit' function */
 
 /* Cow drawing unit deinitialization function.
@@ -42,7 +43,7 @@ static VOID NK5_UnitInit( nk5UNIT_GROUND *Uni, nk5ANIM *Ani )
  */
 static VOID NK5_UnitClose( nk5UNIT_GROUND *Uni, nk5ANIM *Ani )
 {
-  NK5_RndPrimFree(&Uni->Ground);
+  NK5_RndObjFree(&Uni->Ground);
 } /* End of 'NK5_UnitClose' function */
 
 /* Cow drawing unit inter frame events handle function.
@@ -55,7 +56,7 @@ static VOID NK5_UnitClose( nk5UNIT_GROUND *Uni, nk5ANIM *Ani )
  */
 static VOID NK5_UnitResponse( nk5UNIT_GROUND *Uni, nk5ANIM *Ani )
 {
-  Uni->RotateY += Ani->GlobalDeltaTime * Ani->Keys[VK_LBUTTON] * Ani->Mdx * 200;
+  
 } /* End of 'NK5_UnitResponse' function */
 
 /* Cow drawing unit render function.
@@ -68,7 +69,7 @@ static VOID NK5_UnitResponse( nk5UNIT_GROUND *Uni, nk5ANIM *Ani )
  */
 static VOID NK5_UnitRender( nk5UNIT_GROUND *Uni, nk5ANIM *Ani )
 {
-  NK5_RndPrimDraw(&Uni->Ground, MatrMulMatr(MatrRotateY(Uni->RotateY), MatrTranslate(VecSet1((DBL)Ani->Mz / 100))));
+  NK5_RndObjDraw(&Uni->Ground, MatrScale(VecSet1(4)));
 } /* End of 'NK5_UnitRender' function */
 
 /* Cow drawing unit creation function.

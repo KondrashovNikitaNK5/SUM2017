@@ -14,8 +14,12 @@
 typedef struct tagnk5UNIT_CONTROL
 {
   NK5_UNIT_BASE_FIELDS
-  HFONT hFont;         /* Using font */
+  DBL HRot, VRot;
+  DBL Dist;
+  INT ABuf[2], ASrc[2];
 } nk5UNIT_CONTROL;
+
+/* Sound */
 
 /* Control unit initialization function.
  * ARGUMENTS:
@@ -27,6 +31,36 @@ typedef struct tagnk5UNIT_CONTROL
  */
 static VOID NK5_UnitInit( nk5UNIT_CONTROL *Uni, nk5ANIM *Ani )
 {
+  INT format;
+  UINT size, freq;
+  CHAR loop;
+  VOID *mem;
+
+  /* Create sound buffers */
+  alGenBuffers(2, Uni->ABuf);
+
+  alutLoadWAVFile("a1.wav", &format, &mem, &size, &freq, &loop);  
+  alBufferData(Uni->ABuf[0], format, mem, size, freq);
+  alutUnloadWAV(format, mem, size, freq);  
+
+  alutLoadWAVFile("a2.wav", &format, &mem, &size, &freq, &loop);  
+  alBufferData(Uni->ABuf[1], format, mem, size, freq);
+  alutUnloadWAV(format, mem, size, freq);  
+
+  /* Create sound sources */
+  alGenSources(2, Uni->ASrc);
+
+  /* Bind buffer to source */
+  alSourcei(Uni->ASrc[0], AL_BUFFER, Uni->ABuf[0]);
+  /* alSourcef(Uni->ASrc[0], AL_PITCH, 0.50); */
+  alSourcef(Uni->ASrc[0], AL_GAIN, 0.30);
+  alSourcei(Uni->ASrc[0], AL_LOOPING, 1);
+
+  alSourcei(Uni->ASrc[1], AL_BUFFER, Uni->ABuf[1]);
+  /* alSourcef(Uni->ASrc[1], AL_PITCH, 0.50); */
+  alSourcef(Uni->ASrc[1], AL_GAIN, 1);
+  alSourcei(Uni->ASrc[1], AL_LOOPING, 0);
+
 } /* End of 'NK5_UnitInit' function */
 
 /* Control unit deinitialization function.
@@ -39,7 +73,8 @@ static VOID NK5_UnitInit( nk5UNIT_CONTROL *Uni, nk5ANIM *Ani )
  */
 static VOID NK5_UnitClose( nk5UNIT_CONTROL *Uni, nk5ANIM *Ani )
 {
-  DeleteObject(Uni->hFont);
+  alDeleteBuffers(2, Uni->ABuf);
+  alDeleteSources(2, Uni->ASrc);
 } /* End of 'NK5_UnitClose' function */
 
 /* Control unit inter frame events handle function.
@@ -53,11 +88,36 @@ static VOID NK5_UnitClose( nk5UNIT_CONTROL *Uni, nk5ANIM *Ani )
 static VOID NK5_UnitResponse( nk5UNIT_CONTROL *Uni, nk5ANIM *Ani )
 {
   static BOOL isGround = FALSE;
+  static BOOL isBattleship = FALSE;
+  static BOOL isFighter = FALSE;
+  static BOOL isFighter2 = FALSE;
+  static BOOL isFighter3 = FALSE;
+  VEC V;
 
   if(!isGround)
   {
     isGround = !isGround;
     NK5_AnimAddUnit(NK5_UnitCreateGround());
+  }
+  if(!isBattleship)
+  {
+    isBattleship = !isBattleship;
+    NK5_AnimAddUnit(NK5_UnitCreateBattleship());
+  }
+  if(!isFighter)
+  {
+    isFighter = !isFighter;
+    NK5_AnimAddUnit(NK5_UnitCreateFighter());
+  }
+  if(!isFighter2)
+  {
+    isFighter2 = !isFighter2;
+    NK5_AnimAddUnit(NK5_UnitCreateFighter2());
+  }
+  if(!isFighter3)
+  {
+    isFighter3 = !isFighter3;
+    NK5_AnimAddUnit(NK5_UnitCreateFighter3());
   }
 
   if (Ani->KeysClick[VK_ESCAPE])
@@ -72,7 +132,29 @@ static VOID NK5_UnitResponse( nk5UNIT_CONTROL *Uni, nk5ANIM *Ani )
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   else if (Ani->KeysClick['S'])
     NK5_AnimAddUnit(NK5_UnitCreateCow());
+  else if (Ani->JButClick[0])
+    alSourcePlay(Uni->ASrc[1]);
+  else if (Ani->KeysClick['M'])
+    alSourcePause(Uni->ASrc[0]);
+  else if (Ani->KeysClick['N'])
+    alSourcePlay(Uni->ASrc[0]);
 
+  
+  Uni->Dist += Ani->Mdz / 120;
+  Uni->HRot -= 8 * 30 * Ani->GlobalDeltaTime * Ani->Keys[VK_LBUTTON] * Ani->Mdx;
+  Uni->VRot -= 8 * 30 * Ani->GlobalDeltaTime * Ani->Keys[VK_LBUTTON] * Ani->Mdy;
+  if (Uni->VRot > 89)
+    Uni->VRot = 89;
+  if (Uni->VRot < -89)
+    Uni->VRot = -89;
+  
+  V = VecSet(0, 4, Uni->Dist);
+  V = VecMulMatr43(V, MatrMulMatr(MatrRotateX(Uni->VRot), MatrRotateY(Uni->HRot)));
+  NK5_RndMatrView = MatrView(V, VecSet(0, 0, 0), VecSet(0, 1, 0));
+  
+  NK5_RndLightPos = VecAddVec(NK5_RndLightPos, VecMulNum(VecSet(Ani->Jx, Ani->Jy, Ani->Jz), 8 * Ani->GlobalDeltaTime));
+  if (Ani->JBut[2])
+    NK5_RndLightPos = VecSet(0, 0, 0);
 } /* End of 'NK5_UnitResponse' function */
 
 /* Control unit render function.

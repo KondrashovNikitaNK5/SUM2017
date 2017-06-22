@@ -58,6 +58,10 @@ nk5UNIT * NK5_UnitCreateControl( VOID );
 nk5UNIT * NK5_UnitCreateCow( VOID );
 nk5UNIT * NK5_UnitCreateLight( VOID );
 nk5UNIT * NK5_UnitCreateGround( VOID );
+nk5UNIT * NK5_UnitCreateBattleship( VOID );
+nk5UNIT * NK5_UnitCreateFighter( VOID );
+nk5UNIT * NK5_UnitCreateFighter2( VOID );
+nk5UNIT * NK5_UnitCreateFighter3( VOID );
 VOID NK5_AnimAddUnit( nk5UNIT *Uni );
 
 #endif

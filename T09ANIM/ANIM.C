@@ -72,7 +72,6 @@ BOOL NK5_AnimInit( HWND hWnd )
   }
 
   NK5_RndInit();
-  NK5_RndProgId = NK5_RndShaderLoad("A");
 
   return TRUE;
 }
@@ -90,13 +89,15 @@ VOID NK5_AnimClose( VOID )
 
   NK5_Anim.NumOfUnits = 0;
 
-  NK5_RndShaderFree(NK5_RndProgId);
+  NK5_RndClose();
 
   /* Delete OpenGL data */
   wglMakeCurrent(NULL, NULL);
   wglDeleteContext(NK5_Anim.hGLRC);
   /* Delete GDI data */
   ReleaseDC(NK5_Anim.hWnd, NK5_Anim.hDC);
+
+  memset(&NK5_Anim, 0, sizeof(nk5ANIM));
 }
 
 /* change frame's size */
@@ -211,8 +212,13 @@ VOID NK5_AnimRender( VOID )
   /*** Update shader ***/
   if (NK5_Anim.GlobalTime - ShdTime > 2)
   {
-    NK5_RndShaderFree(NK5_RndProgId);
-    NK5_RndProgId = NK5_RndShaderLoad("A");
+    INT i;
+
+    for (i = 0; i < NK5_RndNumOfShaders; i++)
+    {
+      NK5_RndShaderFree(NK5_RndShaders[i].ProgId);
+      NK5_RndShaders[i].ProgId = NK5_RndShaderLoad(NK5_RndShaders[i].Name);
+    }
     ShdTime = NK5_Anim.GlobalTime;
   }
 

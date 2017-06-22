@@ -218,6 +218,10 @@
 				Name="Rendering System"
 				>
 				<File
+					RelativePath=".\MATERIAL.C"
+					>
+				</File>
+				<File
 					RelativePath=".\OBJ.C"
 					>
 				</File>
@@ -242,11 +246,27 @@
 				Name="Unit Samples"
 				>
 				<File
+					RelativePath=".\U_BATTLESHIP.C"
+					>
+				</File>
+				<File
 					RelativePath=".\U_CONTR.C"
 					>
 				</File>
 				<File
 					RelativePath=".\U_COW.C"
+					>
+				</File>
+				<File
+					RelativePath=".\U_FIGHTER2.C"
+					>
+				</File>
+				<File
+					RelativePath=".\U_FIGHTER3.C"
+					>
+				</File>
+				<File
+					RelativePath=".\U_FIGTHER.C"
 					>
 				</File>
 				<File
