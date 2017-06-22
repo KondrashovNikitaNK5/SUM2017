@@ -48,7 +48,6 @@ BOOL NK5_AnimInit( HWND hWnd )
   /* Store window and create memory device context */
   NK5_Anim.IsPause = FALSE;
   NK5_Anim.FPS = 50;
-  NK5_AnimAddUnit(NK5_UnitCreateControl());
 
   /* OpenGL initialization: setup pixel format */
   pfd.nSize = sizeof(pfd);

@@ -30,7 +30,7 @@ typedef struct tagnk5UNIT_FIGHTER
 static VOID NK5_UnitInit( nk5UNIT_FIGHTER *Uni, nk5ANIM *Ani )
 {
   NK5_RndObjLoad(&Uni->Fighter, "TIE-fighter.g3dm");
-  Uni->Fighter.M= MatrMulMatr(MatrTranslate(VecSet(-2000, 1000, 0)), MatrScale(VecSet1(0.1)));
+  Uni->Fighter.M= MatrMulMatr(MatrTranslate(VecSet(-2000, 0, 0)), MatrScale(VecSet1(0.1)));
 } /* End of 'NK5_UnitInit' function */
 
 /* Fighter drawing unit deinitialization function.
@@ -69,7 +69,7 @@ static VOID NK5_UnitResponse( nk5UNIT_FIGHTER *Uni, nk5ANIM *Ani )
  */
 static VOID NK5_UnitRender( nk5UNIT_FIGHTER *Uni, nk5ANIM *Ani )
 {
-  NK5_RndObjDraw(&Uni->Fighter, MatrMulMatr(Uni->Fighter.M ,MatrRotateY(Ani->Time * 102)));
+  NK5_RndObjDraw(&Uni->Fighter, MatrMulMatr(Uni->Fighter.M, MatrMulMatr(MatrTranslate(VecSet(0, sin(Ani->Time / 3) * 100, 0)), MatrRotateY(Ani->Time * 56))));
 } /* End of 'NK5_UnitRender' function */
 
 /* Fighter drawing unit creation function.

@@ -91,38 +91,7 @@ static VOID NK5_UnitClose( nk5UNIT_CONTROL *Uni, nk5ANIM *Ani )
  */
 static VOID NK5_UnitResponse( nk5UNIT_CONTROL *Uni, nk5ANIM *Ani )
 {
-  static BOOL isGround = FALSE;
-  static BOOL isBattleship = FALSE;
-  static BOOL isFighter = FALSE;
-  static BOOL isFighter2 = FALSE;
-  static BOOL isFighter3 = FALSE;
   VEC V;
-
-  if(!isGround)
-  {
-    isGround = !isGround;
-    NK5_AnimAddUnit(NK5_UnitCreateGround());
-  }
-  if(!isBattleship)
-  {
-    isBattleship = !isBattleship;
-    NK5_AnimAddUnit(NK5_UnitCreateBattleship());
-  }
-  if(!isFighter)
-  {
-    isFighter = !isFighter;
-    NK5_AnimAddUnit(NK5_UnitCreateFighter());
-  }
-  if(!isFighter2)
-  {
-    isFighter2 = !isFighter2;
-    NK5_AnimAddUnit(NK5_UnitCreateFighter2());
-  }
-  if(!isFighter3)
-  {
-    isFighter3 = !isFighter3;
-    NK5_AnimAddUnit(NK5_UnitCreateFighter3());
-  }
 
   if (Ani->KeysClick[VK_ESCAPE])
     NK5_AnimDoExit();
@@ -134,8 +103,6 @@ static VOID NK5_UnitResponse( nk5UNIT_CONTROL *Uni, nk5ANIM *Ani )
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   else if (Ani->KeysClick['Q'])
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-  else if (Ani->KeysClick['C'])
-    NK5_AnimAddUnit(NK5_UnitCreateCow());
   if (Ani->JButClick[0])
     alSourcePlay(Uni->ASrc[1]);
   if (Ani->KeysClick['M'])

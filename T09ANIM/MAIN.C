@@ -87,6 +87,14 @@ INT WINAPI WinMain( HINSTANCE hInstancce, HINSTANCE hPrevInstance, CHAR *CmdLine
   ShowWindow(hWnd, SW_SHOWNORMAL);
   UpdateWindow(hWnd);
 
+  NK5_AnimAddUnit(NK5_UnitCreateControl());
+  NK5_AnimAddUnit(NK5_UnitCreateGround());
+  NK5_AnimAddUnit(NK5_UnitCreateBattleship());
+  NK5_AnimAddUnit(NK5_UnitCreateFighter());
+  NK5_AnimAddUnit(NK5_UnitCreateFighter2());
+  NK5_AnimAddUnit(NK5_UnitCreateFighter3());
+  NK5_AnimAddUnit(NK5_UnitCreateCow());
+
   /* waiting message about 'WM_QUIT' */
   while (TRUE)
   {
