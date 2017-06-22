@@ -45,7 +45,7 @@ vec3 Shade( vec3 P, vec3 N )
   // Specular
   vec3 R = reflect(V, N);
   float rl = dot(L, R);
-  color += Ks * max(pow(rl, Ph), 0);
+  //color += Ks * max(pow(rl, Ph), 0);
 
   return color;
 }

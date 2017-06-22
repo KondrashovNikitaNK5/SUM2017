@@ -10,11 +10,13 @@
 
 #include "anim.h"
 
+
+DBL px = 0, py = 0, pz = 0, rt = PI / 2;
 /* Animation unit representation type */
 typedef struct tagnk5UNIT_CONTROL
 {
   NK5_UNIT_BASE_FIELDS
-  DBL HRot, VRot;
+  DBL HRot, VRot, X, Y, Z;
   DBL Dist;
   INT ABuf[2], ASrc[2];
 } nk5UNIT_CONTROL;
@@ -39,13 +41,13 @@ static VOID NK5_UnitInit( nk5UNIT_CONTROL *Uni, nk5ANIM *Ani )
   /* Create sound buffers */
   alGenBuffers(2, Uni->ABuf);
 
-  alutLoadWAVFile("a1.wav", &format, &mem, &size, &freq, &loop);  
+  alutLoadWAVFile("mus.wav", &format, &mem, &size, &freq, &loop);
   alBufferData(Uni->ABuf[0], format, mem, size, freq);
-  alutUnloadWAV(format, mem, size, freq);  
+  alutUnloadWAV(format, mem, size, freq);
 
-  alutLoadWAVFile("a2.wav", &format, &mem, &size, &freq, &loop);  
+  alutLoadWAVFile("mus.wav", &format, &mem, &size, &freq, &loop);
   alBufferData(Uni->ABuf[1], format, mem, size, freq);
-  alutUnloadWAV(format, mem, size, freq);  
+  alutUnloadWAV(format, mem, size, freq);
 
   /* Create sound sources */
   alGenSources(2, Uni->ASrc);
@@ -57,10 +59,11 @@ static VOID NK5_UnitInit( nk5UNIT_CONTROL *Uni, nk5ANIM *Ani )
   alSourcei(Uni->ASrc[0], AL_LOOPING, 1);
 
   alSourcei(Uni->ASrc[1], AL_BUFFER, Uni->ABuf[1]);
-  /* alSourcef(Uni->ASrc[1], AL_PITCH, 0.50); */
+  alSourcef(Uni->ASrc[1], AL_PITCH, 1.00);
   alSourcef(Uni->ASrc[1], AL_GAIN, 1);
   alSourcei(Uni->ASrc[1], AL_LOOPING, 0);
 
+  alSourcePlay(Uni->ASrc[1]);
 } /* End of 'NK5_UnitInit' function */
 
 /* Control unit deinitialization function.
@@ -73,7 +76,8 @@ static VOID NK5_UnitInit( nk5UNIT_CONTROL *Uni, nk5ANIM *Ani )
  */
 static VOID NK5_UnitClose( nk5UNIT_CONTROL *Uni, nk5ANIM *Ani )
 {
-  alDeleteBuffers(2, Uni->ABuf);
+  alSourceStop(Uni->ASrc[0]);
+  alDeleteBuffers(2, Uni->ASrc);
   alDeleteSources(2, Uni->ASrc);
 } /* End of 'NK5_UnitClose' function */
 
@@ -126,35 +130,69 @@ static VOID NK5_UnitResponse( nk5UNIT_CONTROL *Uni, nk5ANIM *Ani )
     NK5_AnimFlipFullScreen();
   else if (Ani->KeysClick['P'])
     NK5_Anim.IsPause = !NK5_Anim.IsPause;
-  else if (Ani->KeysClick['W'])
+  else if (Ani->KeysClick['E'])
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   else if (Ani->KeysClick['Q'])
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-  else if (Ani->KeysClick['S'])
+  else if (Ani->KeysClick['C'])
     NK5_AnimAddUnit(NK5_UnitCreateCow());
-  else if (Ani->JButClick[0])
+  if (Ani->JButClick[0])
     alSourcePlay(Uni->ASrc[1]);
-  else if (Ani->KeysClick['M'])
+  if (Ani->KeysClick['M'])
     alSourcePause(Uni->ASrc[0]);
-  else if (Ani->KeysClick['N'])
+  if (Ani->KeysClick['N'])
     alSourcePlay(Uni->ASrc[0]);
 
-  
-  Uni->Dist += Ani->Mdz / 120;
+  if (Ani->Keys['W'])
+  {
+    px += 90 * Ani->GlobalDeltaTime * 1.8 * cos(rt);
+    pz += 90 * Ani->GlobalDeltaTime * 1.8 * sin(rt);
+  }
+  if (Ani->Keys['A'])
+  {
+    px += 90 * Ani->GlobalDeltaTime * 1.8 * sin(rt);
+    pz -= 90 * Ani->GlobalDeltaTime * 1.8 * cos(rt);
+  }
+  if (Ani->Keys['S'])
+  {
+    px -= 90 * Ani->GlobalDeltaTime * 1.8 * cos(rt);
+    pz -= 90 * Ani->GlobalDeltaTime * 1.8 * sin(rt);
+  }
+  if (Ani->Keys['D'])
+  {
+    px -= 90 * Ani->GlobalDeltaTime * 1.8 * sin(rt);
+    pz += 90 * Ani->GlobalDeltaTime * 1.8 * cos(rt);
+  }
+  if (Ani->Keys[VK_CONTROL])
+  {
+    py -= 90 * Ani->GlobalDeltaTime * 1.2;
+  }
+  if (Ani->Keys[VK_SPACE])
+  {
+    py += 90 * Ani->GlobalDeltaTime * 1.2;
+  }
+  if (Ani->Mdx != 0)
+    rt += Ani->GlobalDeltaTime * Ani->Mdx * Ani->Keys[VK_LBUTTON];
+
+  NK5_RndMatrView = MatrView(VecSet(px, py, pz), VecSet(px + cos(rt), py, pz + sin(rt)), VecSet(0, 1, 0));
+
+  /*Uni->Dist += Ani->Mdz / 120;
   Uni->HRot -= 8 * 30 * Ani->GlobalDeltaTime * Ani->Keys[VK_LBUTTON] * Ani->Mdx;
   Uni->VRot -= 8 * 30 * Ani->GlobalDeltaTime * Ani->Keys[VK_LBUTTON] * Ani->Mdy;
+  Uni->X += 240 * Ani->GlobalDeltaTime * (Ani->Keys['S'] - Ani->Keys['W']);
+  Uni->Z += 240 * Ani->GlobalDeltaTime * (Ani->Keys['A'] - Ani->Keys['D']);
   if (Uni->VRot > 89)
     Uni->VRot = 89;
   if (Uni->VRot < -89)
     Uni->VRot = -89;
   
   V = VecSet(0, 4, Uni->Dist);
-  V = VecMulMatr43(V, MatrMulMatr(MatrRotateX(Uni->VRot), MatrRotateY(Uni->HRot)));
-  NK5_RndMatrView = MatrView(V, VecSet(0, 0, 0), VecSet(0, 1, 0));
+  V = VecMulMatr43(V, MatrMulMatr(MatrTranslate(VecSet(Uni->X, Uni->Y, Uni->Z)), MatrMulMatr(MatrRotateX(Uni->VRot), MatrRotateY(Uni->HRot))));
+  NK5_RndMatrView = MatrView(V, VecSet(0, 0, 0), VecSet(0, 1, 0));*/
   
   NK5_RndLightPos = VecAddVec(NK5_RndLightPos, VecMulNum(VecSet(Ani->Jx, Ani->Jy, Ani->Jz), 8 * Ani->GlobalDeltaTime));
   if (Ani->JBut[2])
-    NK5_RndLightPos = VecSet(0, 0, 0);
+    NK5_RndLightPos = VecSet(30000, 0, 0);
 } /* End of 'NK5_UnitResponse' function */
 
 /* Control unit render function.
